@@ -1,0 +1,7 @@
+**/node_modules/*
+**/out/*
+**/.next/*
+*.css
+*.svg
+sw.js
+workbox-*.js

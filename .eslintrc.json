@@ -1,3 +1,97 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "arrow-body-style": "off",
+    "prefer-arrow-callback": "off",
+    "react/react-in-jsx-scope": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "semi": ["error", "always"],
+        "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
+        "max-len": [
+          "error",
+          {
+            "code": 90,
+            "ignoreUrls": true,
+            "ignoreComments": true,
+            "ignoreRegExpLiterals": true
+          }
+        ],
+        "no-confusing-arrow": ["error", { "allowParens": false }],
+        "no-mixed-operators": "error",
+        "no-tabs": ["error", { "allowIndentationTabs": true }],
+        "no-unexpected-multiline": "error",
+        "quotes": [
+          "error",
+          "single",
+          { "avoidEscape": true, "allowTemplateLiterals": false }
+        ],
+        "lines-around-comment": [
+          "error",
+          {
+            "beforeBlockComment": true,
+            "afterBlockComment": true,
+            "beforeLineComment": false,
+            "afterLineComment": false,
+            "allowBlockStart": true,
+            "allowBlockEnd": true,
+            "allowObjectStart": true,
+            "allowObjectEnd": true,
+            "allowArrayStart": true,
+            "allowArrayEnd": true
+          }
+        ],
+        "react/function-component-definition": [
+          "error",
+          {
+            "namedComponents": [
+              "function-declaration",
+              "function-expression",
+              "arrow-function"
+            ],
+            "unnamedComponents": ["function-expression", "arrow-function"]
+          }
+        ],
+        "react/jsx-props-no-spreading": [
+          "error",
+          {
+            "exceptions": ["Component", "App"]
+          }
+        ],
+        "import/extensions": [
+          "error",
+          "ignorePackages",
+          {
+            "ts": "never",
+            "tsx": "never"
+          }
+        ],
+        "no-undef": "off",
+        "react/require-default-props": "off",
+        "import/no-extraneous-dependencies": "off"
+      }
+    }
+  ]
 }

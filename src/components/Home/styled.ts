@@ -1,29 +1,33 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-  display: grid;
-  height: 100%;
-  grid-template-columns: 25% 75%;
-  grid-auto-flow: column;
-  grid-gap: 20px;
+  display: flex;
+  height: 100vh;
+  gap: 20px;
 
   @media (max-width: 550px) {
     display: flex;
     flex-direction: column;
     gap: 0;
+    height: 100%;
   }
 `;
 
 const Wrapper = styled.div`
   padding: 20px 0;
+  height: 100%;
 `;
 
 const LeftWrapper = styled(Wrapper)`
-  // background: yellow;
+  width: 22%;
+
+  @media (max-width: 550px) {
+    width: 100%;
+  }
 `;
 
 const RightWrapper = styled(Wrapper)`
-  // background: cyan;
+  flex: 1;
 `;
 
 export { Container, LeftWrapper, RightWrapper };

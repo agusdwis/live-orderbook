@@ -90,7 +90,9 @@
         ],
         "no-undef": "off",
         "react/require-default-props": "off",
-        "import/no-extraneous-dependencies": "off"
+        "import/no-extraneous-dependencies": "off",
+        "no-param-reassign": "off",
+        "camelcase": "off"
       }
     }
   ]

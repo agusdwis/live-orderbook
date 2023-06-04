@@ -1,10 +1,9 @@
-// import '@/styles/globals.css';
-
 import type { AppProps } from 'next/app';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
 import NextHeadSeo from 'next-head-seo';
 
 import GlobalStyle from '@/utils/globalStyle';
+import '@/assets/css/fonts.css';
 
 const theme: DefaultTheme = {
   colors: {

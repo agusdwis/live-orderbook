@@ -1,16 +1,21 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-const Container = styled.div`
+interface IContainer {
+  isMobile: boolean;
+}
+
+const Container = styled.div<IContainer>`
   display: flex;
-  height: 100vh;
   gap: 20px;
 
-  @media (max-width: 550px) {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    height: 100%;
-  }
+  ${({ isMobile }) =>
+    isMobile &&
+    css`
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      height: 100%;
+    `}
 `;
 
 const Wrapper = styled.div`
@@ -18,12 +23,14 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
-const LeftWrapper = styled(Wrapper)`
-  width: 22%;
+const LeftWrapper = styled(Wrapper)<IContainer>`
+  width: 25%;
 
-  @media (max-width: 550px) {
-    width: 100%;
-  }
+  ${({ isMobile }) =>
+    isMobile &&
+    css`
+      width: 100%;
+    `}
 `;
 
 const RightWrapper = styled(Wrapper)`

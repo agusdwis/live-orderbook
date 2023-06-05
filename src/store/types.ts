@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface WatchlistData {
   product_id: string;
   price: string;
@@ -16,6 +17,22 @@ export type WatchlistState = {
 };
 
 export type WatchlistAction = {
-  // eslint-disable-next-line no-unused-vars
   setWatchlistSingleData: (key: string, data: WatchlistData) => void;
+};
+
+export interface OrderbookState {
+  market: string;
+  rawBids: number[][];
+  bids: number[][];
+  maxTotalBids: number;
+  rawAsks: number[][];
+  asks: number[][];
+  maxTotalAsks: number;
+  groupingSize: number;
+}
+
+export type OrderbookAction = {
+  setOrderbookSnapshot: (payload: any) => void;
+  setAddBids: (payload: any) => void;
+  setAddAsks: (payload: any) => void;
 };

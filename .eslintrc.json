@@ -92,7 +92,8 @@
         "react/require-default-props": "off",
         "import/no-extraneous-dependencies": "off",
         "no-param-reassign": "off",
-        "camelcase": "off"
+        "camelcase": "off",
+        "no-use-before-define": "off"
       }
     }
   ]

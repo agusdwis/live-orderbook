@@ -1,11 +1,29 @@
 import { useState, useEffect } from 'react';
 
 import WatchList from '@/components/Watchlist';
+import OrderBook from '@/components/Orderbook';
 
 import { Container, LeftWrapper, RightWrapper } from './styled';
 
 export default function HomePage() {
-  const [isPageVisible, setIsPageVisible] = useState<boolean>(true);
+  const [windowWidth, setWindowWidth] = useState<number>(0);
+  const [isActive, setIsActive] = useState<boolean>(true);
+
+  const handleWindowResize = () => {
+    const width = window.innerWidth;
+    setWindowWidth(width);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    handleWindowResize();
+  }, []);
 
   useEffect(() => {
     let hidden: string = '';
@@ -32,10 +50,10 @@ export default function HomePage() {
       const isHidden = document.hidden;
       if (isHidden) {
         document.title = 'CLP Paused';
-        setIsPageVisible(false);
+        setIsActive(false);
       } else {
         document.title = 'CLP - Crypto Live Price';
-        setIsPageVisible(true);
+        setIsActive(true);
       }
     };
 
@@ -46,14 +64,26 @@ export default function HomePage() {
         false
       );
     }
+
+    return () => {
+      document.removeEventListener(
+        visibilityChange,
+        handleVisibilityChange,
+        false
+      );
+    };
   }, []);
 
+  const isMobile = windowWidth < 900;
+
   return (
-    <Container>
-      <LeftWrapper>
-        <WatchList isActive={isPageVisible} />
+    <Container isMobile={isMobile}>
+      <LeftWrapper isMobile={isMobile}>
+        <WatchList isActive={isActive} />
       </LeftWrapper>
-      <RightWrapper>Right Container</RightWrapper>
+      <RightWrapper>
+        <OrderBook isActive={isActive} isMobile={isMobile} />
+      </RightWrapper>
     </Container>
   );
 }

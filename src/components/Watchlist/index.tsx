@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
+import useWebSocket from 'react-use-websocket';
 
 import TICKER from '@/constants/channel';
 import useStore from '@/store/useWatchlist';
@@ -14,11 +14,18 @@ import { Container, CardWrapper } from './styled';
 const WSS_FEED_URL: string | undefined = process.env.NEXT_PUBLIC_WSS_FEED_URL;
 const productsIDs = [BTC, ETH, SOL, ADA, DOT, MATIC];
 
-export default function WatchList() {
+interface IWatchlist {
+  isActive: boolean;
+}
+
+export default function WatchList({ isActive }: IWatchlist) {
   const [crypto, setCrypto] = useState(productsIDs);
 
-  const { readyState, sendJsonMessage, lastJsonMessage } = useWebSocket(
-    WSS_FEED_URL as string
+  const { sendJsonMessage, lastJsonMessage, getWebSocket } = useWebSocket(
+    WSS_FEED_URL as string,
+    {
+      shouldReconnect: () => true,
+    }
   );
 
   const { watchlist, setWatchlistSingleData } = useStore();
@@ -28,14 +35,26 @@ export default function WatchList() {
   }, []);
 
   useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
-      sendJsonMessage({
+    function connect() {
+      const unSubscribeMessage = {
+        type: 'unsubscribe',
+        product_ids: crypto,
+        channels: [TICKER],
+      };
+      sendJsonMessage(unSubscribeMessage);
+
+      const subscribeMessage = {
         type: 'subscribe',
         product_ids: crypto,
         channels: [TICKER],
-      });
+      };
+      sendJsonMessage(subscribeMessage);
     }
-  }, [crypto, readyState, sendJsonMessage]);
+
+    if (!isActive) getWebSocket()?.close();
+
+    connect();
+  }, [isActive, crypto, sendJsonMessage, getWebSocket]);
 
   useEffect(() => {
     if (lastJsonMessage) {

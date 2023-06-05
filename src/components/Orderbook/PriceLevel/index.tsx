@@ -1,4 +1,5 @@
 import { formatNumber, formatPrice } from '@/utils/orderbook';
+import { OrderType } from '@/constants/common';
 
 import DepthVisualizer from '../DepthVisualizer';
 import PriceLevelRow from '../PriceLevelRow';
@@ -19,7 +20,7 @@ export default function PriceLevel({
     (currentLevel: number[], nextLevel: number[]): number => {
       let result: number = 0;
 
-      if (orderType === 0 || isMobile) {
+      if (orderType === OrderType.BIDS || isMobile) {
         result = nextLevel[0] - currentLevel[0];
       } else {
         result = currentLevel[0] - nextLevel[0];

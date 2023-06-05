@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
 
 import useStore from '@/store/useOrderbook';
+import { OrderType } from '@/constants/common';
 
 import PriceLevel from './PriceLevel';
 import TitleRow from './TitleRow';
@@ -13,11 +14,6 @@ const WSS_FEED_URL: string | undefined =
   process.env.NEXT_PUBLIC_WSS_ORDERBOOK_URL;
 
 const PRODUCT = 'PI_ETHUSD';
-
-const OrderType = {
-  BIDS: 0,
-  ASKS: 1,
-};
 
 interface Delta {
   bids: number[][];

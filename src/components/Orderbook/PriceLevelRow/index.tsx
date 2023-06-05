@@ -1,3 +1,5 @@
+import { OrderType } from '@/constants/common';
+
 import { PriceLevelContainer as Container } from '../styled';
 
 interface PriceLevelRowProps {
@@ -16,7 +18,7 @@ const PriceLevelRow = ({
   isMobile,
 }: PriceLevelRowProps) => {
   return (
-    <Container isBid={orderType === 0} isMobile={isMobile}>
+    <Container isBid={orderType === OrderType.BIDS} isMobile={isMobile}>
       <span className="price">{price}</span>
       <span>{size}</span>
       <span>{total}</span>

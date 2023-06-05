@@ -1,4 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { FunctionComponent } from 'react';
+
+import { OrderType } from '@/constants/common';
 
 interface DepthVisualizerProps {
   depth: number;
@@ -11,11 +14,12 @@ const DepthVisualizer: FunctionComponent<DepthVisualizerProps> = ({
   orderType,
   isMobile,
 }) => {
-  const isBorderCustom = orderType === 0 && !isMobile;
+  const isBorderCustom = orderType === OrderType.BIDS && !isMobile;
   return (
     <div
       style={{
-        backgroundColor: `${orderType === 0 ? '#113534' : '#3d1e28'}`,
+        backgroundColor: `${orderType === OrderType.BIDS ? '#113534' : '#3d1e28'
+          }`,
         height: '20px',
         width: `${depth}%`,
         maxWidth: '100%',

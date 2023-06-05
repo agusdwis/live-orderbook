@@ -63,25 +63,25 @@ interface IPrice {
 
 const UpAnimation = keyframes`
   0% {
-    color: #000;
+    color: #00AB6B;
   }
-  50% {
+  40% {
     color: #00AB6B;
   }
   100% {
-    color: #000;
+    color: unset;
   }
 `;
 
 const DownAnimation = keyframes`
   0% {
-    color: #000;
+    color: #EE4A49;
   }
-  50% {
+  40% {
     color: #EE4A49;
   }
   100% {
-    color: #000;
+    color: unset;
   }
 `;
 

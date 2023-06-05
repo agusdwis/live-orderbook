@@ -6,7 +6,7 @@ import OrderBook from '@/components/Orderbook';
 import { Container, LeftWrapper, RightWrapper } from './styled';
 
 export default function HomePage() {
-  const [windowWidth, setWindowWidth] = useState<number>(0);
+  const [windowWidth, setWindowWidth] = useState<number | undefined>(undefined);
   const [isActive, setIsActive] = useState<boolean>(true);
 
   const handleWindowResize = () => {
@@ -74,7 +74,9 @@ export default function HomePage() {
     };
   }, []);
 
-  const isMobile = windowWidth < 900;
+  if (!windowWidth) return <div />;
+
+  const isMobile = Boolean(windowWidth < 900);
 
   return (
     <Container isMobile={isMobile}>

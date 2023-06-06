@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { create } from 'zustand';
 import produce from 'immer';
 
@@ -7,7 +8,9 @@ import {
   getMaxTotalSum,
   addDepths,
   applyDeltas,
+  convertArrayToNumber,
 } from '@/utils/orderbook';
+import { getSnapshot } from '@/lib/orderbook';
 
 import { OrderbookState, OrderbookAction } from './types';
 
@@ -19,7 +22,8 @@ const initialState: OrderbookState = {
   rawAsks: [],
   asks: [],
   maxTotalAsks: 0,
-  groupingSize: 0.05,
+  groupingSize: 1,
+  lastUpdateId: 0,
 };
 
 type OrderbookStore = typeof initialState & OrderbookAction;
@@ -27,24 +31,26 @@ type OrderbookStore = typeof initialState & OrderbookAction;
 const useOrderbookStore = create<OrderbookStore>((set, get) => ({
   ...initialState,
   setOrderbookSnapshot: (payload: any) => {
-    const rawBids: number[][] = payload.bids;
-    const rawAsks: number[][] = payload.asks;
-    const bids: number[][] = addTotalSums(
-      groupByTicketSize(rawBids, get().groupingSize)
-    );
-    const asks: number[][] = addTotalSums(
-      groupByTicketSize(rawAsks, get().groupingSize)
-    );
+    const groupSize = get().groupingSize;
+
+    const rawBids: number[][] = convertArrayToNumber(payload.bids);
+    const rawAsks: number[][] = convertArrayToNumber(payload.asks);
+
+    const groupedBids: number[][] = groupByTicketSize(rawBids, groupSize);
+    const groupedAsks: number[][] = groupByTicketSize(rawAsks, groupSize);
+
+    const bids: number[][] = addTotalSums(groupedBids);
+    const asks: number[][] = addTotalSums(groupedAsks);
 
     set(
       produce((state: OrderbookState) => {
-        state.market = payload.product_id;
+        state.market = payload.product_id ?? '';
         state.rawBids = rawBids;
         state.rawAsks = rawAsks;
         state.maxTotalBids = getMaxTotalSum(bids);
         state.maxTotalAsks = getMaxTotalSum(asks);
-        state.bids = addDepths(bids, get().maxTotalBids);
-        state.asks = addDepths(asks, get().maxTotalAsks);
+        state.bids = addDepths(bids, getMaxTotalSum(bids));
+        state.asks = addDepths(asks, getMaxTotalSum(asks));
       })
     );
   },
@@ -84,9 +90,29 @@ const useOrderbookStore = create<OrderbookStore>((set, get) => ({
     set(
       produce((state: OrderbookState) => {
         state.maxTotalAsks = getMaxTotalSum(updatedAsks);
-        state.asks = addDepths(updatedAsks, get().maxTotalBids);
+        state.asks = addDepths(updatedAsks, get().maxTotalAsks);
       })
     );
+  },
+  getSnapshot: async (symbol: string) => {
+    try {
+      const { data } = await getSnapshot(symbol);
+
+      if (!data) {
+        throw Error('Failed to fetch snapshot');
+      }
+
+      get().setOrderbookSnapshot(data);
+
+      set(
+        produce((state: OrderbookState) => {
+          state.market = symbol;
+          state.lastUpdateId = data.lastUpdateId ?? 0;
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
   },
 }));
 

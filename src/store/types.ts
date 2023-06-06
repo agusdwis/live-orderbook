@@ -29,10 +29,12 @@ export interface OrderbookState {
   asks: number[][];
   maxTotalAsks: number;
   groupingSize: number;
+  lastUpdateId: number;
 }
 
 export type OrderbookAction = {
   setOrderbookSnapshot: (payload: any) => void;
   setAddBids: (payload: any) => void;
   setAddAsks: (payload: any) => void;
+  getSnapshot: (symbol: string) => void;
 };

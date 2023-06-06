@@ -22,11 +22,26 @@ const groupByPrice = (levels: number[][]): number[][] => {
     .filter((level) => level.length > 0);
 };
 
+const groupByPriceReduce = (levels: number[][]): number[][] => {
+  const groupedData = levels.reduce((result: number[][], item) => {
+    const key = item[0];
+    const index = result.findIndex((arr) => arr[0] === key);
+    if (index === -1) {
+      result.push([key, item[1]]);
+    } else {
+      result[index][1] += item[1];
+    }
+    return result;
+  }, []);
+
+  return groupedData;
+};
+
 const groupByTicketSize = (
   levels: number[][],
   ticketSize: number
 ): number[][] => {
-  return groupByPrice(
+  return groupByPriceReduce(
     levels.map((level) => [roundToNearest(level[0], ticketSize), level[1]])
   );
 };
@@ -43,6 +58,7 @@ const formatPrice = (arg: number): string => {
 };
 
 const addTotalSums = (orders: number[][]): number[][] => {
+  // console.log('DEBUG::  orders', orders)
   const totalSums: number[] = [];
 
   return orders.map((order: number[], idx) => {
@@ -55,6 +71,7 @@ const addTotalSums = (orders: number[][]): number[][] => {
     const totalSum: number = idx === 0 ? size : size + totalSums[idx - 1];
     updatedLevel[2] = totalSum;
     totalSums.push(totalSum);
+
     return updatedLevel;
   });
 };
@@ -74,8 +91,12 @@ const addDepths = (orders: number[][], maxTotal: number): number[][] => {
 };
 
 const getMaxTotalSum = (orders: number[][]): number => {
-  const totalSums: number[] = orders.map((order) => order[2]);
-  return Math.max(...totalSums);
+  const maxSecondValue = orders.reduce((max, item) => {
+    const secondValue = item[2];
+    return Math.max(max, secondValue);
+  }, Number.NEGATIVE_INFINITY);
+
+  return maxSecondValue;
 };
 
 const removePriceLevel = (price: number, levels: number[][]): number[][] =>
@@ -134,9 +155,41 @@ const applyDeltas = (
   return updatedLevels;
 };
 
+const convertArrayToNumber = (array: string[][]): number[][] => {
+  return array
+    .map((item) => [parseFloat(item[0]), parseFloat(item[1])])
+    .filter((item) => item[1] !== 0);
+};
+
+interface SubArray extends Array<number> {
+  0: number;
+  1: number;
+  2: number;
+}
+
+function filterDatabyThreshold(
+  data: SubArray[],
+  threshold: number,
+  useMin: boolean = true
+): SubArray[] {
+  const firstValues: number[] = data.map((item) => item[0]);
+  // @ts-ignore
+  // eslint-disable-next-line no-unused-vars
+  const thresholdFunction: (values: number[]) => number = useMin
+    ? Math.min
+    : Math.max;
+  const minMaxValue: number = thresholdFunction(firstValues);
+  const filteredData: SubArray[] = data.filter(
+    (item) => item[0] >= minMaxValue - threshold
+  );
+
+  return filteredData;
+}
+
 export {
   roundToNearest,
   groupByPrice,
+  groupByPriceReduce,
   groupByTicketSize,
   formatNumber,
   formatPrice,
@@ -147,4 +200,6 @@ export {
   levelExists,
   addPriceLevel,
   applyDeltas,
+  convertArrayToNumber,
+  filterDatabyThreshold,
 };

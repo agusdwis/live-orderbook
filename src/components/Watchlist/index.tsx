@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
 
 import TICKER from '@/constants/channel';
@@ -21,8 +21,6 @@ interface IWatchlist {
 export default function WatchList({ isActive }: IWatchlist) {
   const [crypto, setCrypto] = useState(productsIDs);
 
-  const isFirstRender = useRef(true);
-
   const { sendJsonMessage, lastJsonMessage, getWebSocket } = useWebSocket(
     WSS_FEED_URL as string,
     {
@@ -37,11 +35,6 @@ export default function WatchList({ isActive }: IWatchlist) {
   }, []);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
     function connect() {
       const unSubscribeMessage = {
         type: 'unsubscribe',

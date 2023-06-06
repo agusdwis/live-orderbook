@@ -56,21 +56,11 @@ export default function OrderBook({ isActive = true, isMobile }: IWatchlist) {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
     store.getSnapshot(SYMBOL.toUpperCase());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
     function connect() {
       const unSubscribeMessage = {
         method: 'UNSUBSCRIBE',

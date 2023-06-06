@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL: string = 'https://api.binance.com/api/v3/';
+const BASE_URL: string | undefined = process.env.NEXT_PUBLIC_BINANCE_URL;
 
 const api = axios.create({
   baseURL: BASE_URL,
